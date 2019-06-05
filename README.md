@@ -1,4 +1,4 @@
-# ComputerScience 30 Final Project - VR City Escape Game
+# ComputerScience 30 Final Project - City Escape Game
 The general idea of this game is to ahve a player run around a procedurally generated map and try to escape before the zombies infect and catch them. The zombies have the ability to also infect civilians around them so as time goes on, the map will be harder to escape with more zombies.
 
 Environment -
@@ -11,18 +11,24 @@ NPC -
 	The city will be populated two different kinds of NPCs. A civilian NPC and a zombie NPC. the civilian NPC would attempt to run from zombies. Zombies will try to convert civilians into zombies and to kill the player.
 
 
-# Installing
-You will need to have Unity installed beforehand.
+# Getting Started / Installing
+You will need to have Unity installed beforehand. You are able to install unity from their website.
+Download and import the most current version of the game into Unity.
+
+# Screenshots
+
+To be added soon
+
+
 
 # Built With
 - Unity
 - C#
 
-
-# Authors and Acknowledgment
-Hasin Zaman
-Rachel Pawliuk
+# Credits
+- Hasin Zaman
+- Rachel Pawliuk
 
 # Project Status
-In Progress
+In Progress - Currently on version 0.8.5
 
