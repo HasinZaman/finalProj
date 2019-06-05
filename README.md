@@ -19,10 +19,10 @@ You will need to have Unity installed beforehand.
 - C#
 
 
-#Authors and Acknowledgment
+# Authors and Acknowledgment
 Hasin Zaman
 Rachel Pawliuk
 
-#Project Status
+# Project Status
 In Progress
 
