@@ -6,16 +6,37 @@ using UnityEngine;
 public class roadCheck : MonoBehaviour {
 
     public List<GameObject> connectingNodes = new List<GameObject> { };
+    
+    //creates a node at where two nodes collide
+    private void intersectionNodeCreator(Vector3 point, List<GameObject> nodes)
+    {
+        GameObject temp = Instantiate(Resources.Load("streetNode"), point , Quaternion.identity) as GameObject;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        //assings variables
+        temp.GetComponent<nodeScript>().gridProximityStrength = 0;
+        temp.GetComponent<nodeScript>().gridID = -1;
+        temp.GetComponent<nodeScript>().nodeID = 0;
+        temp.GetComponent<nodeScript>().XLocation = 0;
+        temp.GetComponent<nodeScript>().YLocation = 0;
+        temp.GetComponent<nodeScript>().minNodeDistance = 0;
+        temp.GetComponent<nodeScript>().avaliableConnection = 0;
+
+        for (int i1 = 0; i1 < nodes.Count; i1++)
+        {
+            nodeConnection connection = new nodeConnection();
+
+            connection.nodes[0] = this.gameObject;
+            connection.nodes[1] = nodes[i1].gameObject;
+
+            temp.GetComponent<nodeScript>().finalistNode.Add(connection);
+            nodes[i1].GetComponent<nodeScript>().finalistNode.Add(connection);
+        }
+
+        
+    }
+
+
+    //replaces road with a road mesh
     public void roadMetamorphs()
     {
         GameObject roadMesh = Instantiate(Resources.Load("road2"), this.transform.position, Quaternion.identity) as GameObject;
@@ -45,11 +66,12 @@ public class roadCheck : MonoBehaviour {
 
         Destroy(this.gameObject);
     }
+
+    //checks if roads are colliding with another road
     void OnCollisionEnter(Collision collisionInfo)
     {
         if (collisionInfo.gameObject.tag == "road")
         {
-            Debug.Log("group 1: " + collisionInfo.gameObject.GetComponent<roadCheck>().connectingNodes[0].GetComponent<nodeScript>().nodeID+", "+ collisionInfo.gameObject.GetComponent<roadCheck>().connectingNodes[1].GetComponent<nodeScript>().nodeID+ "| group 2: "+connectingNodes[0].GetComponent<nodeScript>().nodeID+", "+connectingNodes[1].GetComponent<nodeScript>().nodeID);
             //delete other node
             if (connectingNodes[0].GetComponent<nodeScript>().outerNode && connectingNodes[1].GetComponent<nodeScript>().outerNode)
             {
@@ -64,9 +86,11 @@ public class roadCheck : MonoBehaviour {
                 connectingNodes[1].GetComponent<nodeScript>().connectedNode.Remove(connectingNodes[0]);
                 Destroy(this.gameObject);
             }
-            //delete self
+            //creates a node at the collision point and connects both nodes to the new node(plan)
+            //removes self
             else
             {
+
                 connectingNodes[0].GetComponent<nodeScript>().connectedNode.Remove(connectingNodes[1]);
                 connectingNodes[1].GetComponent<nodeScript>().connectedNode.Remove(connectingNodes[0]);
                 Destroy(this.gameObject);

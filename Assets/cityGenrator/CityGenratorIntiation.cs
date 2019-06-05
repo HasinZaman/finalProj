@@ -4,10 +4,16 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
+// CityGenratorIntiation creates the city
 public class CityGenratorIntiation : MonoBehaviour {
 
+    //decalres variables
     int phase = 0;
+    //orders nodes based on node quality
+    private List<nodeConnection> connections = new List<nodeConnection> { };
+    int counter = 0;
 
+    //checks road already exists
     bool roadCheck(List<nodeConnection> createdRoads, nodeConnection checkingNode)
     {
         for (int i1 = 0; i1<createdRoads.Count; i1++)
@@ -26,7 +32,7 @@ public class CityGenratorIntiation : MonoBehaviour {
         return rad * (180 / Math.PI);
     }
 
-    //creates grid in scene
+    //creates grid in the scene
     void gridCreator(float height, float width, float xCenter, float yCenter, int maxConnections, double gridRodation, float minDistX, float minDistY, int minNodeDist, int gridId, double strengthDecayVal)
     {
         // gets the starting x and y points of grid
@@ -65,17 +71,6 @@ public class CityGenratorIntiation : MonoBehaviour {
 
                 //prints variables
                 nodeScript tempVariables = temp.GetComponent<nodeScript>();
-//                Debug.Log("x - " + x);
-//                Debug.Log("y - " + y);
- //               Debug.Log("xtransistion - " + xTransistion);
-  //              Debug.Log("ytransistion - " + yTransistion);
-    //            Debug.Log("angle - " + angleChange);
-      //          Debug.Log("quadrant - ");
-        //        Debug.Log("sin value - " + Math.Sin(angleChange));
-          //      Debug.Log("cos value - " + Math.Cos(angleChange));
-            //    Debug.Log("sin value - " + Math.Sin(angleChange));
-              //  Debug.Log("x local - " + xTransistion * Math.Cos(angleChange));
-                //Debug.Log("y local - " + yTransistion * Math.Sin(angleChange));
 
                 //counter
                 counter = counter + 1;
@@ -124,7 +119,7 @@ public class CityGenratorIntiation : MonoBehaviour {
     }
 
 
-	// Use this for initialization
+	// creates grid
 	void Start () {
         //genrates item (Math.PI/6)
         gridCreator(32, 64, 0, 0 , 4, Math.PI/6 , 15, 10, 9, 1, 0.05);
@@ -132,27 +127,37 @@ public class CityGenratorIntiation : MonoBehaviour {
         phase = 1;
     }
 
-    //orders nodes based on node quality
-    private List<nodeConnection> connections = new List<nodeConnection> { };
-
-    int counter = 0;
+    
     // Update is called once per frame
     void Update () {
         //checks for nodes that are too close
         if (phase == 1)
         {
+
+            List<GameObject> allNodes = new List<GameObject>{ };
+            //gets all nodes that are too close
             foreach (GameObject node in GameObject.FindGameObjectsWithTag("streetNode"))
             {
-                node.GetComponent<nodeScript>().nodeCheck();
+                allNodes.Add(node);
+            }
+            allNodes.OrderBy(node => node.GetComponent<nodeScript>().gridProximityStrength);
+
+            //destroy nodes that are too close
+            //the node with a weaker grid strength will be destroyed in a conflict
+            for (int i1 = 0; i1<allNodes.Count; i1++)
+            {
+                if (allNodes[i1].GetComponent<nodeScript>().existance)
+                {
+                    allNodes[i1].GetComponent<nodeScript>().nodeCheck();
+                }
             }
         }
-        //connects nodes+
+        //connects nodes
         else if (phase == 2)
         {
-            string allNodesInorder = "";
+            //find all possible connections
             foreach (GameObject node in GameObject.FindGameObjectsWithTag("streetNode"))
             {
-                allNodesInorder += " " + node.gameObject.GetComponent<nodeScript>().nodeID;
                 Collider[] nodesRaw = Physics.OverlapSphere(node.GetComponent<nodeScript>().transform.position, node.GetComponent<nodeScript>().maxNodeDistance);
 
                 List<GameObject> nodes = new List<GameObject> { };
@@ -166,6 +171,7 @@ public class CityGenratorIntiation : MonoBehaviour {
 
 
 
+                //organizes connections by a node heiarchy
                 if (node.GetComponent<nodeScript>().outerNode)
                 {
                     node.GetComponent<nodeScript>().possibleConnections.Add(node.GetComponent<nodeScript>().strongNodeStrengthFilter(node.GetComponent<nodeScript>().otherGridFilter(nodes)));
@@ -177,7 +183,7 @@ public class CityGenratorIntiation : MonoBehaviour {
                 }
             }
         }
-        // checks common nodes and finalist nodes
+        // filters out uncommon nodes
         else if (phase == 3)
         {
             foreach (GameObject node in GameObject.FindGameObjectsWithTag("streetNode"))
@@ -186,7 +192,7 @@ public class CityGenratorIntiation : MonoBehaviour {
 
             }
         }
-        //creates roads
+        //gets all possible connections
         else if (phase == 4)
         {
 
@@ -203,6 +209,7 @@ public class CityGenratorIntiation : MonoBehaviour {
             }
             connections.OrderBy(connection => connection.connectionQuality);
         }
+        //creates a road between every node
         else if (phase == 5)
         {
             for (int i1 = 0; i1 < connections.Count; i1++)
@@ -216,7 +223,8 @@ public class CityGenratorIntiation : MonoBehaviour {
 
             }
         }
-        // changes roads to the road mesh
+        //connections are destroyed based if roads are intersectings
+        // repeats phase 5, 3 times inorder connect nodes that still can connect
         else if (phase == 6)
         {
             if (counter < 3)
@@ -225,6 +233,7 @@ public class CityGenratorIntiation : MonoBehaviour {
                 phase = 4;
             }
         }
+        //turns the roads into their road mesh
         else if(phase == 7)
         {
             foreach(GameObject road in GameObject.FindGameObjectsWithTag("road"))
@@ -232,11 +241,18 @@ public class CityGenratorIntiation : MonoBehaviour {
                 road.gameObject.GetComponent<roadCheck>().roadMetamorphs();
             }
         }
+        //deletes all nodes that are not connected
         else if(phase == 8)
         {
-
+            foreach(GameObject node in GameObject.FindGameObjectsWithTag("streetNode"))
+            {
+                if (node.GetComponent<nodeScript>().connectedNode.Count == 0)
+                {
+                    Destroy(node);
+                }
+            }
         }
-        //deletes self
+        //after the map has been genrated the map deletes itself
         else
         {
             Destroy(this.gameObject);

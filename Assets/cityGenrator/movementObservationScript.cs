@@ -5,14 +5,11 @@ using System;
 
 public class movementObservationScript : MonoBehaviour {
 
+    //delcares all local variables
     private float speed = 30;
-
-	// Use this for initialization
-	void Start () {
-		
-	}
+    
 	
-	// Update is called once per frame
+	// checks if the camera needs to move or not
 	void Update () {
 
         if (Input.GetKey(KeyCode.LeftArrow))
@@ -30,6 +27,7 @@ public class movementObservationScript : MonoBehaviour {
         {
             transform.position += Vector3.back * speed * Time.deltaTime;
         }
+
         if(Input.GetKey(KeyCode.Space) && Input.GetKey(KeyCode.LeftShift)){
             transform.position += Vector3.down * speed * Time.deltaTime;
         }else if (Input.GetKey(KeyCode.Space))
