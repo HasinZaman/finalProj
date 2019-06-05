@@ -132,6 +132,10 @@ public class CityGenratorIntiation : MonoBehaviour {
         phase = 1;
     }
 
+    //orders nodes based on node quality
+    private List<nodeConnection> connections = new List<nodeConnection> { };
+
+    int counter = 0;
     // Update is called once per frame
     void Update () {
         //checks for nodes that are too close
@@ -143,46 +147,20 @@ public class CityGenratorIntiation : MonoBehaviour {
             }
         }
         //connects nodes+
-        else if(phase == 2)
+        else if (phase == 2)
         {
             string allNodesInorder = "";
             foreach (GameObject node in GameObject.FindGameObjectsWithTag("streetNode"))
             {
                 allNodesInorder += " " + node.gameObject.GetComponent<nodeScript>().nodeID;
                 Collider[] nodesRaw = Physics.OverlapSphere(node.GetComponent<nodeScript>().transform.position, node.GetComponent<nodeScript>().maxNodeDistance);
-                if(node.gameObject.GetComponent<nodeScript>().nodeID == 357 && node.gameObject.GetComponent<nodeScript>().gridID == 1)
-                {
-                    Debug.Log("connections raw");
-                    for (int i1 = 0; i1 < nodesRaw.Length; i1++)
-                    {
-                        Debug.Log(node.gameObject.GetComponent<nodeScript>().nodeID + " " + nodesRaw[i1].GetComponent<nodeScript>().nodeID);
 
-                    }
-                }
                 List<GameObject> nodes = new List<GameObject> { };
-                string nodesStr = "";
                 for (int i1 = 0; i1 < nodesRaw.Length; i1++)
                 {
-                    if(nodesRaw[i1].gameObject == node.gameObject)
+                    if (nodesRaw[i1].gameObject != node.gameObject)
                     {
-                        //nodesStr += " this" + nodesRaw[i1].GetComponent<nodeScript>().nodeID;
-                    }
-                    else
-                    {
-                       // nodesStr += " " + nodesRaw[i1].gameObject.GetComponent<nodeScript>().gridID + "," + nodesRaw[i1].gameObject.GetComponent<nodeScript>().nodeID;
                         nodes.Add(nodesRaw[i1].gameObject);
-                    }
-                    
-                    //Debug.Log(nodesRaw[i1].GetComponent<nodeScript>().nodeID);
-                    
-                }
-                if (node.gameObject.GetComponent<nodeScript>().nodeID == 357 && node.gameObject.GetComponent<nodeScript>().gridID == 1)
-                {
-                    Debug.Log("connections Processed");
-                    for (int i1 = 0; i1 < nodes.Count; i1++)
-                    {
-                        Debug.Log(node.gameObject.GetComponent<nodeScript>().nodeID + " " + nodes[i1].GetComponent<nodeScript>().nodeID);
-
                     }
                 }
 
@@ -198,9 +176,6 @@ public class CityGenratorIntiation : MonoBehaviour {
                     node.GetComponent<nodeScript>().possibleConnections.Add(node.GetComponent<nodeScript>().strongNodeStrengthFilter(nodes));
                 }
             }
-            //Debug.Log("all nodes inorder");
-            //Debug.Log(allNodesInorder);
-        
         }
         // checks common nodes and finalist nodes
         else if (phase == 3)
@@ -209,26 +184,15 @@ public class CityGenratorIntiation : MonoBehaviour {
             {
                 node.gameObject.GetComponent<nodeScript>().commonNode();
 
-                if (node.gameObject.GetComponent<nodeScript>().nodeID == 357 && node.gameObject.GetComponent<nodeScript>().gridID == 1)
-                {
-                    Debug.Log("Getting connections");
-                    for (int i1 = 0; i1 < node.gameObject.GetComponent<nodeScript>().finalistNode.Count; i1++)
-                    {
-                        Debug.Log(node.gameObject.GetComponent<nodeScript>().finalistNode[i1].nodes[0].GetComponent<nodeScript>().nodeID + " " + node.gameObject.GetComponent<nodeScript>().finalistNode[i1].nodes[1].GetComponent<nodeScript>().nodeID);
-
-                    }
-                }
             }
         }
         //creates roads
-        else if(phase == 4)
+        else if (phase == 4)
         {
-            //orders nodes based on node quality
-            List<nodeConnection> connections = new List<nodeConnection> { };
 
             foreach (GameObject node in GameObject.FindGameObjectsWithTag("streetNode"))
             {
-                for (int i1 = 0; i1< node.gameObject.GetComponent<nodeScript>().finalistNode.Count; i1++)
+                for (int i1 = 0; i1 < node.gameObject.GetComponent<nodeScript>().finalistNode.Count; i1++)
                 {
 
                     if (roadCheck(connections, node.gameObject.GetComponent<nodeScript>().finalistNode[i1]))
@@ -238,20 +202,34 @@ public class CityGenratorIntiation : MonoBehaviour {
                 }
             }
             connections.OrderBy(connection => connection.connectionQuality);
-
-            for(int i1 = 0; i1 < connections.Count; i1++)
+        }
+        else if (phase == 5)
+        {
+            for (int i1 = 0; i1 < connections.Count; i1++)
             {
                 if (connections[i1].nodes[0].GetComponent<nodeScript>().avaliableConnection > 0 && connections[i1].nodes[1].GetComponent<nodeScript>().avaliableConnection > 0)
                 {
-                    if ((connections[i1].nodes[0].GetComponent<nodeScript>().nodeID == 357 && connections[i1].nodes[0].GetComponent<nodeScript>().gridID == 1) || (connections[i1].nodes[1].GetComponent<nodeScript>().nodeID == 357 && connections[i1].nodes[0].GetComponent<nodeScript>().gridID == 1))
-                    {
-                        Debug.Log("creating road");
-                        Debug.Log(connections[i1].nodes[0].GetComponent<nodeScript>().nodeID + " " + connections[i1].nodes[1].GetComponent<nodeScript>().nodeID);
-                    }
                     connections[i1].nodes[0].GetComponent<nodeScript>().createRoad(connections[i1].nodes[1]);
+                    connections.Remove(connections[i1]);
                 }
-               
-                
+
+
+            }
+        }
+        // changes roads to the road mesh
+        else if (phase == 6)
+        {
+            if (counter < 3)
+            {
+                counter++;
+                phase = 4;
+            }
+        }
+        else if(phase == 7)
+        {
+            foreach(GameObject road in GameObject.FindGameObjectsWithTag("road"))
+            {
+                road.gameObject.GetComponent<roadCheck>().roadMetamorphs();
             }
         }
         //deletes self

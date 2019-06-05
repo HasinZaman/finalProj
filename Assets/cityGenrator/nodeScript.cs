@@ -123,6 +123,16 @@ public class nodeScript : MonoBehaviour {
 
         
     }
+    public double nodeDist(GameObject node1,GameObject node2)
+    {
+        double xDist = node1.gameObject.transform.position.x - node2.gameObject.transform.position.x;
+        double yDist = node1.gameObject.transform.position.y - node2.gameObject.transform.position.y;
+        double zDist = node1.gameObject.transform.position.z - node2.gameObject.transform.position.z;
+
+        double xzDist = Math.Pow(Math.Pow(xDist, 2) + Math.Pow(yDist, 2), 0.5);
+        double dist = Math.Pow(Math.Pow(xzDist, 2) + Math.Pow(yDist, 2), 0.5);
+        return dist;
+    }
     //format heiarcy (nodeType, priortys inorder of| next node, prytorties|...)
     //example EOgcPgc|MC
     //Og = other grid, Pg = parent grid, Hs = highest strength, ls = lowest strength, r = random  
@@ -163,13 +173,38 @@ public class nodeScript : MonoBehaviour {
     }
     public List<GameObject> strongNodeStrengthFilter(List<GameObject> nodePool)
     {
-        List<GameObject> newOrderNodes = nodePool.OrderBy(node => node.GetComponent<nodeScript>().gridProximityStrength).ToList();
-
-        return newOrderNodes;
+        try
+        {
+            List<GameObject> newOrderNodes = nodePool.OrderBy(node => node.GetComponent<nodeScript>().gridProximityStrength).ToList();
+            return newOrderNodes;
+        }
+        catch
+        {
+            return new List<GameObject> { };
+        }
+            
+        
     }
     public List<GameObject> weakNodeStrengthFilter(List<GameObject> nodePool)
     {
-        List<GameObject> newOrderNodes = nodePool.OrderBy(node => node.GetComponent<nodeScript>().gridProximityStrength).Reverse().ToList();
+        try
+        {
+            List<GameObject> newOrderNodes = nodePool.OrderBy(node => node.GetComponent<nodeScript>().gridProximityStrength).Reverse().ToList();
+            return newOrderNodes;
+        }
+        catch
+        {
+            return new List<GameObject> { };
+        }
+    }
+    public List<GameObject> closetNodeFilter(List<GameObject> nodePool)
+    {
+        List<GameObject> newOrderNodes = nodePool.OrderBy(node => nodeDist(node,this.gameObject)).ToList();
+        return newOrderNodes;
+    }
+    public List<GameObject> farthestNodeFilter(List<GameObject> nodePool)
+    {
+        List<GameObject> newOrderNodes = nodePool.OrderBy(node => nodeDist(node, this.gameObject)).Reverse().ToList();
         return newOrderNodes;
     }
     //checks if the conection is possible
@@ -187,6 +222,7 @@ public class nodeScript : MonoBehaviour {
         }
         return connectionQuality;
     }
+
     
     public void commonNode()
     {
@@ -236,8 +272,13 @@ public class nodeScript : MonoBehaviour {
             Vector3 scale = road.transform.localScale;
             scale.y = ((this.transform.position - temp.transform.position) / 2).magnitude;
             road.transform.localScale = scale;
+            
                 
             road.transform.rotation = Quaternion.FromToRotation(Vector3.up, this.transform.position - temp.transform.position);
+
+            road.GetComponent<roadCheck>().connectingNodes.Add(this.gameObject);
+            road.GetComponent<roadCheck>().connectingNodes.Add(connectingNode);
+
 
             connectedNode.Add(connectingNode);
             avaliableConnection -= 1;
