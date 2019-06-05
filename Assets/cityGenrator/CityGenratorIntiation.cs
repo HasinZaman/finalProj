@@ -232,6 +232,10 @@ public class CityGenratorIntiation : MonoBehaviour {
                 road.gameObject.GetComponent<roadCheck>().roadMetamorphs();
             }
         }
+        else if(phase == 8)
+        {
+
+        }
         //deletes self
         else
         {

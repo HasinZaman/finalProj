@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,15 +18,32 @@ public class roadCheck : MonoBehaviour {
 	}
     public void roadMetamorphs()
     {
-       // GameObject roadMesh = Instantiate(Resources.Load("road2"), this.transform.position, Quaternion.identity) as GameObject;
+        GameObject roadMesh = Instantiate(Resources.Load("road2"), this.transform.position, Quaternion.identity) as GameObject;
 
-       // Vector3 scale = roadMesh.transform.localScale;
+        Vector3 scale = roadMesh.transform.localScale;
 
-       // scale.z = ((connectingNodes[0].transform.position - connectingNodes[1].transform.position) / 2).magnitude; ;
+        float nodeDist = Convert.ToSingle(connectingNodes[0].GetComponent<nodeScript>().nodeDist(connectingNodes[0], connectingNodes[1]));
 
-       // roadMesh.transform.localScale = scale;
+        float changeRatio = nodeDist;
 
-       // Destroy(this.gameObject);
+        scale.z = ((connectingNodes[0].transform.position - connectingNodes[1].transform.position) / 3.75f).magnitude;
+
+        Debug.Log(nodeDist + " " + changeRatio + scale.z);
+
+        roadMesh.transform.localScale = scale;
+
+        roadMesh.transform.rotation = Quaternion.FromToRotation(Vector3.forward, connectingNodes[0].transform.position - connectingNodes[1].transform.position);
+
+        for(int i1 =0; i1< connectingNodes.Count; i1++)
+        {
+            if (connectingNodes[i1].gameObject.GetComponentInChildren<Renderer>().enabled)
+            {
+                connectingNodes[i1].gameObject.GetComponentInChildren<Renderer>().enabled = false;
+            }
+        }
+        
+
+        Destroy(this.gameObject);
     }
     void OnCollisionEnter(Collision collisionInfo)
     {
