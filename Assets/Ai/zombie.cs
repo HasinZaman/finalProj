@@ -64,24 +64,12 @@ public class zombie : MonoBehaviour
             }
 
         }
-
-        return randomTarget(possibleOptions);
-    }
-
-
-    bool forwardSafe()
-    {
-        Quaternion targetAngle = Quaternion.FromToRotation(Vector3.up, target.transform.position - this.transform.position);
-
-        for (int i1 = 0; i1 < FOOOOOD.Count; i1++)
+        if (possibleOptions.Count == 0)
         {
-            if (targetAngle == Quaternion.FromToRotation(Vector3.up, FOOOOOD[i1].transform.position - this.transform.position))
-            {
-                return true;
-            }
+            randomTarget(nodeConnections);
         }
 
-        return false;
+        return randomTarget(possibleOptions);
     }
     // Start is called before the first frame update
     void Start()
@@ -119,11 +107,6 @@ public class zombie : MonoBehaviour
                     temp.y = 1.5f;
                     this.transform.position = temp;
                     lastNode.gameObject.GetComponentInChildren<Renderer>().enabled = true;
-                }
-                //checking zombie
-                if (forwardSafe())
-                {
-                    target = lastNode;
                 }
                 else
                 {

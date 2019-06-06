@@ -8,33 +8,49 @@ public class aiDetection : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        parent = this.transform.root.gameObject;
+        //parent = this.transform.root.gameObject;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("zommbie AAAAA");
-        if (parent.tag == "npc-civ")
+        if (collision.gameObject.tag != parent.gameObject.tag)
         {
-            parent.GetComponent<civilian>().zombieLocation.Add(collision.gameObject);
-        }
-        else
-        {
-            parent.GetComponent<zombie>().FOOOOOD.Add(collision.gameObject);
+
+            if(collision.gameObject.tag != "Untagged")
+            {
+            //    Debug.Log(parent.gameObject.tag + ":" + collision.gameObject.tag);
+            }
+            if(collision.gameObject.tag == "npc-Civ")
+            {
+                Debug.Log("runn");
+                parent.GetComponent<civilian>().zombieLocation.Add(collision.gameObject);
+            }
+            else if(collision.gameObject.tag == "npc-Zomb")
+            {
+                Debug.Log("Chase");
+                parent.GetComponent<zombie>().FOOOOOD.Add(collision.gameObject);
+            }
         }
         
     }
-    private void OnCollisionExit(Collision collision)
+    void OnCollisionExit(Collision collision)
     {
-
-        Debug.Log("safe");
-        if (parent.tag == "npc-civ")
+        if (collision.gameObject.tag != parent.gameObject.tag)
         {
-            parent.GetComponent<civilian>().zombieLocation.Remove(collision.gameObject);
-        }
-        else
-        {
-            parent.GetComponent<zombie>().FOOOOOD.Remove(collision.gameObject);
+            if (collision.gameObject.tag != "Untagged")
+            {
+            //    Debug.Log(parent.gameObject.tag + ":" + collision.gameObject.tag);
+            }
+            if (collision.gameObject.tag == "npc-Civ")
+            {
+                Debug.Log("safe");
+                parent.GetComponent<civilian>().zombieLocation.Remove(collision.gameObject);
+            }
+            else if (collision.gameObject.tag == "npc-Zomb")
+            {
+                Debug.Log("oh no i lost my food");
+                parent.GetComponent<zombie>().FOOOOOD.Remove(collision.gameObject);
+            }
         }
     }
 }

@@ -257,7 +257,7 @@ public class CityGenratorIntiation : MonoBehaviour {
         else if(phase == 9)
         {
             List<GameObject> allNodes = GameObject.FindGameObjectsWithTag("streetNode").ToList();
-            for (int i1 = 0; i1 < 60; i1++)
+            for (int i1 = 0; i1 < 100; i1++)
             {
                 System.Random rnd = new System.Random();
 
@@ -272,7 +272,7 @@ public class CityGenratorIntiation : MonoBehaviour {
                 npc.GetComponent<civilian>().lastNode = node;
                 allNodes.Remove(node);
             }
-            for (int i1 = 0; i1 < 20; i1++)
+            for (int i1 = 0; i1 < 50; i1++)
             {
                 System.Random rnd = new System.Random();
 

@@ -64,7 +64,7 @@ public class civilian : MonoBehaviour
             }
                  
         }
-
+        
         return randomTarget(possibleOptions);
     }
 
