@@ -30,5 +30,5 @@ To be added soon
 - Rachel Pawliuk
 
 # Project Status
-In Progress - Currently on version 0.8.5
+In Progress - Currently on version 0.9
 
