@@ -191,6 +191,9 @@
 -define:ENABLE_BURST_AOT
 -define:UNITY_TEAM_LICENSE
 -define:ENABLE_VSTU
+Assets/Ai/aiDetection.cs
+Assets/Ai/civilian.cs
+Assets/Ai/zombie.cs
 Assets/cityGenrator/CityGenratorIntiation.cs
 Assets/cityGenrator/movementObservationScript.cs
 Assets/cityGenrator/nodeScript.cs

@@ -49,8 +49,6 @@ public class roadCheck : MonoBehaviour {
 
         scale.z = ((connectingNodes[0].transform.position - connectingNodes[1].transform.position) / 3.75f).magnitude;
 
-        Debug.Log(nodeDist + " " + changeRatio + scale.z);
-
         roadMesh.transform.localScale = scale;
 
         roadMesh.transform.rotation = Quaternion.FromToRotation(Vector3.forward, connectingNodes[0].transform.position - connectingNodes[1].transform.position);

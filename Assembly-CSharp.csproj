@@ -61,6 +61,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Ai\aiDetection.cs" />
+    <Compile Include="Assets\Ai\civilian.cs" />
+    <Compile Include="Assets\Ai\zombie.cs" />
     <Compile Include="Assets\cityGenrator\CityGenratorIntiation.cs" />
     <Compile Include="Assets\cityGenrator\movementObservationScript.cs" />
     <Compile Include="Assets\cityGenrator\nodeScript.cs" />

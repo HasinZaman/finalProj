@@ -13,6 +13,7 @@ public class CityGenratorIntiation : MonoBehaviour {
     private List<nodeConnection> connections = new List<nodeConnection> { };
     int counter = 0;
 
+    public int npcGen = 60;
     //checks road already exists
     bool roadCheck(List<nodeConnection> createdRoads, nodeConnection checkingNode)
     {
@@ -124,6 +125,7 @@ public class CityGenratorIntiation : MonoBehaviour {
         //genrates item (Math.PI/6)
         gridCreator(32, 64, 0, 0 , 4, Math.PI/6 , 15, 10, 9, 1, 0.05);
         gridCreator(50, 30, 30, 50, 4, Math.PI / 4, 20, 30, 19, 2, 0.1);
+        gridCreator(20, 43, 10, 70, 4, Math.PI / 2, 20, 15, 12, 3, 0.08);
         phase = 1;
     }
 
@@ -250,6 +252,40 @@ public class CityGenratorIntiation : MonoBehaviour {
                 {
                     Destroy(node);
                 }
+            }
+        }
+        else if(phase == 9)
+        {
+            List<GameObject> allNodes = GameObject.FindGameObjectsWithTag("streetNode").ToList();
+            for (int i1 = 0; i1 < 60; i1++)
+            {
+                System.Random rnd = new System.Random();
+
+                int r = rnd.Next(allNodes.Count);
+
+                GameObject node = allNodes[r];
+
+                Vector3 position = node.transform.position;
+                position.y += 1.5f;
+                GameObject npc = Instantiate(Resources.Load("civ"), position, Quaternion.identity) as GameObject;
+
+                npc.GetComponent<civilian>().lastNode = node;
+                allNodes.Remove(node);
+            }
+            for (int i1 = 0; i1 < 20; i1++)
+            {
+                System.Random rnd = new System.Random();
+
+                int r = rnd.Next(allNodes.Count);
+
+                GameObject node = allNodes[r];
+
+                Vector3 position = node.transform.position;
+                position.y += 1.5f;
+                GameObject npc = Instantiate(Resources.Load("zombie"), position, Quaternion.identity) as GameObject;
+
+                npc.GetComponent<zombie>().lastNode = node;
+                allNodes.Remove(node);
             }
         }
         //after the map has been genrated the map deletes itself
