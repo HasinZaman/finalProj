@@ -49,16 +49,16 @@ public class civilian : MonoBehaviour
 
         for (int i1 = 0; i1 < zombieLocation.Count; i1++)
         {
-
-            Quaternion angle = Quaternion.FromToRotation(Vector3.forward, zombieLocation[i1].transform.position - this.transform.position);
+            Quaternion angle = Quaternion.LookRotation(zombieLocation[i1].transform.position - this.transform.position);
 
             zombieAngle.Add(angle);
+            
 
         }
 
         for (int i1 = possibleOptions.Count-1; i1 >= 0; i1--)
         {
-            if (zombieAngle.Any(angle => angle == Quaternion.FromToRotation(Vector3.forward, possibleOptions[i1].transform.position - this.transform.position)))
+            if (zombieAngle.Any(angle => angle == Quaternion.LookRotation(possibleOptions[i1].transform.position - this.transform.position)))
             {
                 possibleOptions.Remove(possibleOptions[i1]);
             }
@@ -71,14 +71,15 @@ public class civilian : MonoBehaviour
 
     bool forwardSafe()
     {
-        Quaternion targetAngle = Quaternion.FromToRotation(Vector3.up, target.transform.position - this.transform.position);
+        Quaternion targetAngle = Quaternion.LookRotation(target.transform.position - this.transform.position);
 
         for (int i1 = 0; i1 < zombieLocation.Count; i1++)
         {
-            if(targetAngle == Quaternion.FromToRotation(Vector3.up, zombieLocation[i1].transform.position - this.transform.position))
+            if (targetAngle == Quaternion.LookRotation(zombieLocation[i1].transform.position - this.transform.position))
             {
                 return true;
             }
+            
         }
 
         return false;
@@ -108,14 +109,12 @@ public class civilian : MonoBehaviour
         {
             if (targetReached())
             {
-                lastNode.gameObject.GetComponentInChildren<Renderer>().enabled = false;
                 
                 aiMode = 0;
                 lastNode = target.gameObject;
                 Vector3 temp = lastNode.transform.position;
                 temp.y = 1.5f;
                 this.transform.position = temp;
-                lastNode.gameObject.GetComponentInChildren<Renderer>().enabled = true;
             }
             //checking zombie
             if (forwardSafe())
@@ -124,7 +123,6 @@ public class civilian : MonoBehaviour
             }
             else
             {
-                target.gameObject.GetComponentInChildren<Renderer>().enabled = true;
                 Quaternion temp1 = this.transform.rotation;
                 Quaternion temp2 = Quaternion.LookRotation(target.transform.position-this.transform.position);
                 

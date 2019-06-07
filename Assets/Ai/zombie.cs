@@ -10,13 +10,24 @@ public class zombie : MonoBehaviour
     public GameObject target;
     public GameObject lastNode;
 
-    public int speed = 10;
+    public int speed = 15;
 
     public List<GameObject> FOOOOOD = new List<GameObject> { };
     // 0 = no object
     // 1 = random
     // 2 = run
     public int aiMode = 0;
+
+    private void foodCheck()
+    {
+        for (int i1 = 0; i1 < FOOOOOD.Count; i1++)
+        {
+            if (FOOOOOD[i1] == null)
+            {
+                FOOOOOD.Remove(FOOOOOD[i1]);
+            }
+        }
+    }
 
     private bool targetReached()
     {
@@ -50,7 +61,7 @@ public class zombie : MonoBehaviour
         for (int i1 = 0; i1 < FOOOOOD.Count; i1++)
         {
 
-            Quaternion angle = Quaternion.FromToRotation(Vector3.forward, FOOOOOD[i1].transform.position - this.transform.position);
+            Quaternion angle = Quaternion.LookRotation(FOOOOOD[i1].transform.position - this.transform.position);
 
             zombieAngle.Add(angle);
 
@@ -58,7 +69,7 @@ public class zombie : MonoBehaviour
 
         for (int i1 = possibleOptions.Count - 1; i1 >= 0; i1--)
         {
-            if (zombieAngle.Any(angle => angle == Quaternion.FromToRotation(Vector3.forward, possibleOptions[i1].transform.position - this.transform.position)))
+            if (zombieAngle.Any(angle => angle == Quaternion.LookRotation(possibleOptions[i1].transform.position - this.transform.position)))
             {
                 possibleOptions.Add(possibleOptions[i1]);
             }
@@ -76,10 +87,27 @@ public class zombie : MonoBehaviour
     {
 
     }
+    void OnCollisionEnter(Collision collisionInfo)
+    {
+        if (collisionInfo.gameObject.tag != this.gameObject.tag)
+        {
+            if (collisionInfo.gameObject.tag == "npc-Civ")
+            {
+                Debug.Log("converted");
+                GameObject temp = collisionInfo.gameObject;
 
+                GameObject infected = Instantiate(Resources.Load("zombie"), temp.gameObject.transform.position, Quaternion.identity) as GameObject;
+
+                infected.GetComponent<zombie>().lastNode = temp.gameObject.GetComponent<civilian>().lastNode;
+
+                Destroy(temp);
+            }
+        }
+    }
     // Update is called once per frame
     void Update()
     {
+        foodCheck();
         try
         {
 
@@ -99,18 +127,15 @@ public class zombie : MonoBehaviour
             {
                 if (targetReached())
                 {
-                    lastNode.gameObject.GetComponentInChildren<Renderer>().enabled = false;
                     
                     aiMode = 0;
                     lastNode = target.gameObject;
                     Vector3 temp = lastNode.transform.position;
                     temp.y = 1.5f;
                     this.transform.position = temp;
-                    lastNode.gameObject.GetComponentInChildren<Renderer>().enabled = true;
                 }
                 else
                 {
-                    target.gameObject.GetComponentInChildren<Renderer>().enabled = true;
                     Quaternion temp1 = this.transform.rotation;
                     Quaternion temp2 = Quaternion.LookRotation(target.transform.position - this.transform.position);
 
@@ -127,7 +152,6 @@ public class zombie : MonoBehaviour
         }
         catch
         {
-            Destroy(this.gameObject);
         }
     }
 

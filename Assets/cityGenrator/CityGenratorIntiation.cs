@@ -124,8 +124,8 @@ public class CityGenratorIntiation : MonoBehaviour {
 	void Start () {
         //genrates item (Math.PI/6)
         gridCreator(32, 64, 0, 0 , 4, Math.PI/6 , 15, 10, 9, 1, 0.05);
-        gridCreator(50, 30, 30, 50, 4, Math.PI / 4, 20, 30, 19, 2, 0.1);
-        gridCreator(20, 43, 10, 70, 4, Math.PI / 2, 20, 15, 12, 3, 0.08);
+       // gridCreator(50, 30, 30, 50, 4, Math.PI / 4, 20, 30, 19, 2, 0.1);
+        //gridCreator(20, 43, 10, 70, 4, Math.PI / 2, 20, 15, 12, 3, 0.08);
         phase = 1;
     }
 
@@ -257,7 +257,7 @@ public class CityGenratorIntiation : MonoBehaviour {
         else if(phase == 9)
         {
             List<GameObject> allNodes = GameObject.FindGameObjectsWithTag("streetNode").ToList();
-            for (int i1 = 0; i1 < 100; i1++)
+            for (int i1 = 0; i1 < 500; i1++)
             {
                 System.Random rnd = new System.Random();
 
@@ -272,7 +272,7 @@ public class CityGenratorIntiation : MonoBehaviour {
                 npc.GetComponent<civilian>().lastNode = node;
                 allNodes.Remove(node);
             }
-            for (int i1 = 0; i1 < 50; i1++)
+            for (int i1 = 0; i1 < 10; i1++)
             {
                 System.Random rnd = new System.Random();
 

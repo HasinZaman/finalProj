@@ -8,7 +8,7 @@ public class aiDetection : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //parent = this.transform.root.gameObject;
+        parent = this.transform.parent.gameObject;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -22,13 +22,13 @@ public class aiDetection : MonoBehaviour
             }
             if(collision.gameObject.tag == "npc-Civ")
             {
-                Debug.Log("runn");
-                parent.GetComponent<civilian>().zombieLocation.Add(collision.gameObject);
+             //   Debug.Log("runn");
+                parent.gameObject.GetComponent<zombie>().FOOOOOD.Add(collision.gameObject);
             }
             else if(collision.gameObject.tag == "npc-Zomb")
             {
-                Debug.Log("Chase");
-                parent.GetComponent<zombie>().FOOOOOD.Add(collision.gameObject);
+             //   Debug.Log("Chase");
+                parent.gameObject.GetComponent<civilian>().zombieLocation.Add(collision.gameObject);
             }
         }
         
@@ -41,15 +41,15 @@ public class aiDetection : MonoBehaviour
             {
             //    Debug.Log(parent.gameObject.tag + ":" + collision.gameObject.tag);
             }
-            if (collision.gameObject.tag == "npc-Civ")
+            if (collision.gameObject.tag == "npc-Zomb")
             {
-                Debug.Log("safe");
-                parent.GetComponent<civilian>().zombieLocation.Remove(collision.gameObject);
+            //    Debug.Log("safe");
+                parent.gameObject.GetComponent<civilian>().zombieLocation.Remove(collision.gameObject);
             }
-            else if (collision.gameObject.tag == "npc-Zomb")
+            else if (collision.gameObject.tag == "npc-Civ")
             {
-                Debug.Log("oh no i lost my food");
-                parent.GetComponent<zombie>().FOOOOOD.Remove(collision.gameObject);
+             //   Debug.Log("oh no i lost my food");
+                parent.gameObject.GetComponent<zombie>().FOOOOOD.Remove(collision.gameObject);
             }
         }
     }
