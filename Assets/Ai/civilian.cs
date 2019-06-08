@@ -7,26 +7,31 @@ using UnityEngine;
 public class civilian : MonoBehaviour
 {
 
+    // declares varriables
     public GameObject target;
     public GameObject lastNode;
 
     public int speed = 10;
 
+    //zombie location is a list of every zombie that can be seen
     public List<GameObject> zombieLocation = new List<GameObject> {};
     // 0 = no object
     // 1 = random
     // 2 = run
+
     public int aiMode = 0;
 
+    //checks if the civ has reached teh target
     private bool targetReached()
     {
         RaycastHit ObstacleHit;
-        if (target)    // make sure we have an objective first or we get a dirty error.
+        if (target)
             return (Physics.Raycast(this.transform.position, target.transform.position - this.transform.position, out ObstacleHit, Mathf.Infinity) && ObstacleHit.transform != this.transform && ObstacleHit.transform == target.transform);
         else
             return false;
     }
 
+    //picks a random node from a list of possibe connections at a intersection
     private GameObject randomTarget(List<GameObject> nodeConnections)
     {
 
@@ -41,6 +46,7 @@ public class civilian : MonoBehaviour
         return temp[r];
     }
 
+    //runai finds safe nodes and picks a safe node as a target
     private GameObject runAi(List<GameObject> nodeConnections)
     {
         List<GameObject> possibleOptions = nodeConnections;
@@ -68,7 +74,7 @@ public class civilian : MonoBehaviour
         return randomTarget(possibleOptions);
     }
 
-
+    //checks if the current target is safe
     bool forwardSafe()
     {
         Quaternion targetAngle = Quaternion.LookRotation(target.transform.position - this.transform.position);
@@ -84,17 +90,14 @@ public class civilian : MonoBehaviour
 
         return false;
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
     {
+        //if ai mode  deals with ai tree
         if(aiMode == 0)
         {
+            //finds a new target
             if (zombieLocation.Count > 0)
             {
                 target = runAi(lastNode.GetComponent<nodeScript>().connectedNode);
@@ -107,6 +110,7 @@ public class civilian : MonoBehaviour
         }
         else if(aiMode == 1)
         {
+            //checks if the target is reached
             if (targetReached())
             {
                 
@@ -116,11 +120,13 @@ public class civilian : MonoBehaviour
                 temp.y = 1.5f;
                 this.transform.position = temp;
             }
-            //checking zombie
+
+            //checking if there is a zombie infornt
             if (forwardSafe())
             {
                 target = lastNode;
             }
+            //moves the npc forward
             else
             {
                 Quaternion temp1 = this.transform.rotation;

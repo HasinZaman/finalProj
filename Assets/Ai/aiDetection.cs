@@ -5,7 +5,8 @@ using UnityEngine;
 public class aiDetection : MonoBehaviour
 {
     public GameObject parent;
-    // Start is called before the first frame update
+    
+    //gets parrent
     void Start()
     {
         parent = this.transform.parent.gameObject;
@@ -13,21 +14,15 @@ public class aiDetection : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        // on collision check if civ or zomb enters visual range
         if (collision.gameObject.tag != parent.gameObject.tag)
         {
-
-            if(collision.gameObject.tag != "Untagged")
-            {
-            //    Debug.Log(parent.gameObject.tag + ":" + collision.gameObject.tag);
-            }
             if(collision.gameObject.tag == "npc-Civ")
             {
-             //   Debug.Log("runn");
                 parent.gameObject.GetComponent<zombie>().FOOOOOD.Add(collision.gameObject);
             }
             else if(collision.gameObject.tag == "npc-Zomb")
             {
-             //   Debug.Log("Chase");
                 parent.gameObject.GetComponent<civilian>().zombieLocation.Add(collision.gameObject);
             }
         }
@@ -35,20 +30,15 @@ public class aiDetection : MonoBehaviour
     }
     void OnCollisionExit(Collision collision)
     {
+        //removes zomb and civ from vission
         if (collision.gameObject.tag != parent.gameObject.tag)
         {
-            if (collision.gameObject.tag != "Untagged")
-            {
-            //    Debug.Log(parent.gameObject.tag + ":" + collision.gameObject.tag);
-            }
             if (collision.gameObject.tag == "npc-Zomb")
             {
-            //    Debug.Log("safe");
                 parent.gameObject.GetComponent<civilian>().zombieLocation.Remove(collision.gameObject);
             }
             else if (collision.gameObject.tag == "npc-Civ")
             {
-             //   Debug.Log("oh no i lost my food");
                 parent.gameObject.GetComponent<zombie>().FOOOOOD.Remove(collision.gameObject);
             }
         }

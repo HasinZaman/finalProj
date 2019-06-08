@@ -7,17 +7,20 @@ using UnityEngine;
 public class zombie : MonoBehaviour
 {
 
+    //declares varaibles
     public GameObject target;
     public GameObject lastNode;
 
     public int speed = 15;
 
+    //FOOOOD is just like zombieLocation in civilan.cs but for civilian location
     public List<GameObject> FOOOOOD = new List<GameObject> { };
     // 0 = no object
     // 1 = random
     // 2 = run
     public int aiMode = 0;
 
+    //checks if any the foood index is null
     private void foodCheck()
     {
         for (int i1 = 0; i1 < FOOOOOD.Count; i1++)
@@ -29,15 +32,17 @@ public class zombie : MonoBehaviour
         }
     }
 
+    //checks if target has been reached
     private bool targetReached()
     {
         RaycastHit ObstacleHit;
-        if (target)    // make sure we have an objective first or we get a dirty error.
+        if (target)
             return (Physics.Raycast(this.transform.position, target.transform.position - this.transform.position, out ObstacleHit, Mathf.Infinity) && ObstacleHit.transform != this.transform && ObstacleHit.transform == target.transform);
         else
             return false;
     }
 
+    //selects a random node form a list
     private GameObject randomTarget(List<GameObject> nodeConnections)
     {
 
@@ -52,7 +57,8 @@ public class zombie : MonoBehaviour
         return temp[r];
     }
 
-    private GameObject runAi(List<GameObject> nodeConnections)
+    //selects a path with food on it
+    private GameObject chaseAi(List<GameObject> nodeConnections)
     {
         List<GameObject> possibleOptions = new List<GameObject> { };
 
@@ -82,11 +88,9 @@ public class zombie : MonoBehaviour
 
         return randomTarget(possibleOptions);
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
+    
+    //on collision with civ
+    //civ is converted into another zombie
     void OnCollisionEnter(Collision collisionInfo)
     {
         if (collisionInfo.gameObject.tag != this.gameObject.tag)
@@ -104,18 +108,20 @@ public class zombie : MonoBehaviour
             }
         }
     }
-    // Update is called once per frame
+
     void Update()
     {
+        //gets rid of invalid values in FOOOOOD
         foodCheck();
         try
         {
-
+            
+            //checks if a new target needs to found
             if (aiMode == 0)
             {
                 if (FOOOOOD.Count > 0)
                 {
-                    target = runAi(lastNode.GetComponent<nodeScript>().connectedNode);
+                    target = chaseAi(lastNode.GetComponent<nodeScript>().connectedNode);
                 }
                 else
                 {
@@ -125,6 +131,7 @@ public class zombie : MonoBehaviour
             }
             else if (aiMode == 1)
             {
+                //checks target is reached
                 if (targetReached())
                 {
                     
@@ -134,6 +141,7 @@ public class zombie : MonoBehaviour
                     temp.y = 1.5f;
                     this.transform.position = temp;
                 }
+                //moves the zombie forward
                 else
                 {
                     Quaternion temp1 = this.transform.rotation;
