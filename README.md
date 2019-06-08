@@ -4,7 +4,7 @@ The general idea of this game is to ahve a player run around a procedurally gene
 Environment -
 	The game takes place in a procedurally generated city. The city will will be made up of multiple grids that would interlock with other grids. Modular buildings would be procedurally placed. As a result a procedurally generated city would be created.
 
-Player - 
+Human - 
 	A playable character would be placed into a random position within a the procedurally generated city. The player would have to fight there way to escape a city that is dealing with a zombie outbreak. The player would be played in VR.
 
 NPC - 
@@ -13,7 +13,7 @@ NPC -
 
 # Getting Started / Installing
 You will need to have Unity installed beforehand. You are able to install unity from their website.
-Download and import the most current version of the game into Unity.
+Download and import the most current version asset package.
 
 # Screenshots
 
@@ -30,5 +30,5 @@ To be added soon
 - Rachel Pawliuk
 
 # Project Status
-In Progress - Currently on version 0.9
+In Progress - Currently on version 1.0
 
