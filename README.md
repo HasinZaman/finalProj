@@ -10,6 +10,11 @@ Player -
 NPC - 
 	The city will be populated two different kinds of NPCs. A civilian NPC and a zombie NPC. the civilian NPC would attempt to run from zombies. Zombies will try to convert civilians into zombies and to kill the player.
 
+# Screenshots
+
+[screen shot 1](readMeAssets/screenShot1.PNG)
+[screen shot 1](readMeAssets/screenShot2.PNG)
+[screen shot 1](readMeAssets/screenShot3.PNG)
 
 # Getting Started / Installing
 You will need to have Unity installed beforehand. You are able to install unity from their website.
