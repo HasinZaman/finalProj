@@ -14,7 +14,7 @@ NPC -
 
 ![screen shot 1](https://github.com/HasinZaman/finalProj/blob/master/readMeAssets/screenShot1.PNG)
 ![screen shot 2](readMeAssets/screenShot2.PNG)
-![screen shot 3](https://github.com/HasinZaman/finalProj/blob/master/readMeAssets/screenShot3.PNG)
+![screen shot 3]("readMeAssets/screenShot3.PNG")
 
 # Getting Started / Installing
 You will need to have Unity installed beforehand. You are able to install unity from their website.
